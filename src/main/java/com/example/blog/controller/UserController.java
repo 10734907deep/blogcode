@@ -21,4 +21,18 @@ public class UserController {
         User registeredUser = userService.registerUser(user);
         return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
     }
+
+    @PostMapping("/api/login")
+    public ResponseEntity<String> loginUser(@RequestBody User loginUser) {
+        // Find user by username
+        User existingUser = userService.findByUsername(loginUser.getUsername());
+
+        // Check if user exists and password matches
+        if (existingUser != null && existingUser.getPassword().equals(loginUser.getPassword())) {
+            return ResponseEntity.ok("Login successful");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+        }
+    }
+
 }
